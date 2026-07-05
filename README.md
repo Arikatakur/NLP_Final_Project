@@ -2,6 +2,13 @@
 
 Text classification final project for the NLP course.
 
+## Submitters
+
+- Saleem Yousef
+- Noor Shama
+
+For a fuller explanation of what was implemented and how to run each part, see [PROJECT_GUIDE.md](PROJECT_GUIDE.md).
+
 ## Implemented Parts
 
 - Part 1: data loading, dataset exploration, category distribution graph, and Bag-of-Words baseline.
@@ -43,7 +50,7 @@ For IMDB, use a stable subset of 3,000-5,000 reviews across all parts:
 
 ## Run Commands
 
-Smoke test with the included sample dataset:
+Smoke test with the included small sample dataset:
 
 ```bash
 python -m src.nlp_final_project.part1_baseline --csv-path data/sample_reviews.csv
