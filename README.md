@@ -15,7 +15,7 @@ This project classifies English IMDB movie reviews as positive or negative. It s
 
 The code is implemented and real results were generated from `data/imdb_reviews.csv` using a balanced 5,000-review subset.
 
-The final written 2-3 page report still needs to be prepared before Moodle submission. Use `docs/FINAL_REPORT_TEMPLATE.md` and the generated `outputs/` files.
+The final report draft is available at `docs/FINAL_REPORT.md`. Use the generated `outputs/` files as appendix material if Moodle requires them.
 
 ## Real Results
 
@@ -194,6 +194,7 @@ Important submission files:
 
 - `docs/PROJECT_GUIDE.md`: detailed implementation and run guide
 - `docs/REAL_RESULTS_SUMMARY.md`: real result summary for the report
+- `docs/FINAL_REPORT.md`: final report draft
 - `docs/FINAL_REPORT_TEMPLATE.md`: 2-3 page report outline
 - `docs/BEFORE_SUBMISSION.md`: final checklist
 - `docs/ASSIGNMENT_REQUIREMENTS.md`: extracted assignment requirements
