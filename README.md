@@ -15,17 +15,74 @@ This project classifies English IMDB movie reviews as positive or negative. It s
 
 The code is implemented and real results were generated from `data/imdb_reviews.csv` using a balanced 5,000-review subset.
 
-Final real-results summary:
-
-| Stage | Best / Main Approach | Accuracy | Macro F1 |
-|---|---|---:|---:|
-| Part 1 | Bag-of-Words + Logistic Regression | 0.851 | 0.851 |
-| Part 2 | Preprocessed Bag-of-Words + Logistic Regression | 0.836 | 0.836 |
-| Part 3 | TF-IDF + Logistic Regression, 5-fold CV | 0.866 | 0.866 |
-| Part 4 | TF-IDF bigrams + tuned Logistic Regression, 5-fold CV | 0.867 | 0.867 |
-| Part 5 | HuggingFace DistilBERT sentiment pipeline | 0.878 | 0.878 |
-
 The final written 2-3 page report still needs to be prepared before Moodle submission. Use `docs/FINAL_REPORT_TEMPLATE.md` and the generated `outputs/` files.
+
+## Real Results
+
+![Final results comparison](docs/assets/final_results_comparison.png)
+
+| Part | Main Approach | Evaluation | Accuracy | Macro F1 | Result |
+|---|---|---:|---:|---:|---|
+| Part 1 | Bag-of-Words + Logistic Regression | 1,000-review holdout | 0.851 | 0.851 | Strong baseline |
+| Part 2 | Preprocessed Bag-of-Words + Logistic Regression | 1,000-review holdout | 0.836 | 0.836 | Preprocessing reduced performance |
+| Part 3 | TF-IDF + Logistic Regression | 5-fold CV | 0.866 | 0.866 | Best classifier in comparison |
+| Part 4 | TF-IDF bigrams + tuned Logistic Regression | 5-fold CV | 0.867 | 0.867 | Best classical model |
+| Part 5 | HuggingFace DistilBERT sentiment pipeline | 500-review evaluation subset | 0.878 | 0.878 | Best overall model |
+
+### Part 1 - Dataset And Baseline
+
+The dataset subset is balanced: 2,500 positive and 2,500 negative reviews. The Bag-of-Words Logistic Regression baseline reached `0.851` accuracy and `0.851` macro F1.
+
+![Category distribution](docs/assets/category_distribution.png)
+
+### Part 2 - Preprocessing
+
+Preprocessing included lowercasing, tokenization, stop-word removal, and stemming. It reduced accuracy from `0.851` to `0.836`, which suggests that some removed words or stemmed forms carried useful sentiment information.
+
+| Version | Accuracy | Macro F1 |
+|---|---:|---:|
+| Raw Bag-of-Words | 0.851 | 0.851 |
+| Preprocessed Bag-of-Words | 0.836 | 0.836 |
+
+### Part 3 - Classifier Comparison
+
+TF-IDF with review-length features was evaluated using 5-fold cross-validation. Logistic Regression performed best, while kNN performed poorly on sparse high-dimensional text vectors.
+
+| Classifier | Accuracy Mean | Macro F1 Mean |
+|---|---:|---:|
+| Logistic Regression | 0.866 | 0.866 |
+| Naive Bayes | 0.858 | 0.858 |
+| SVM | 0.857 | 0.857 |
+| Random Forest | 0.830 | 0.830 |
+| kNN | 0.506 | 0.355 |
+
+![Best classifier confusion matrix](docs/assets/best_confusion_matrix.png)
+
+### Part 4 - Improvement And Error Analysis
+
+The best classical model was TF-IDF with bigrams and tuned Logistic Regression regularization (`C=2.0`). It reached `0.867` cross-validated macro F1.
+
+| Variant | Accuracy Mean | Macro F1 Mean |
+|---|---:|---:|
+| TF-IDF bigrams + tuned C | 0.867 | 0.867 |
+| TF-IDF bigrams | 0.866 | 0.866 |
+| TF-IDF unigrams | 0.859 | 0.859 |
+| TF-IDF bigrams limited features | 0.850 | 0.850 |
+
+Error analysis and influential words are available in:
+
+- `outputs/part4/error_analysis.csv`
+- `outputs/part4/influential_words.csv`
+
+### Part 5 - Pretrained Model
+
+The HuggingFace DistilBERT sentiment pipeline was evaluated on raw original text, not preprocessed text. It achieved the best score: `0.878` accuracy and `0.878` macro F1 on a 500-review evaluation subset.
+
+| Version | Evaluated Rows | Accuracy | Macro F1 |
+|---|---:|---:|---:|
+| Part 1 Bag-of-Words baseline | 1000 | 0.851 | 0.851 |
+| Part 4 best classical model | 1000 | 0.861 | 0.861 |
+| Part 5 HuggingFace pretrained model | 500 | 0.878 | 0.878 |
 
 ## Repository Structure
 
@@ -44,6 +101,10 @@ src/nlp_final_project/
   part4_improve_analyze.py
   part5_pretrained_compare.py
 docs/
+  assets/
+    category_distribution.png
+    best_confusion_matrix.png
+    final_results_comparison.png
   ASSIGNMENT_REQUIREMENTS.md
   BEFORE_SUBMISSION.md
   FINAL_REPORT_TEMPLATE.md
