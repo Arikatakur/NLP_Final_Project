@@ -196,18 +196,15 @@ def limit_evaluation_rows(
         drop=True
     )
     if max_rows > 0 and len(evaluation) > max_rows:
-        evaluation = (
-            evaluation.groupby("sentiment", group_keys=False)
-            .apply(
-                lambda group: group.sample(
-                    n=max(1, round(max_rows * len(group) / len(evaluation))),
-                    random_state=RANDOM_STATE,
-                )
+        sampled_groups = []
+        for _, group in evaluation.groupby("sentiment", sort=False):
+            group_size = max(1, round(max_rows * len(group) / len(evaluation)))
+            sampled_groups.append(
+                group.sample(n=min(group_size, len(group)), random_state=RANDOM_STATE)
             )
-            .sample(frac=1, random_state=RANDOM_STATE)
-            .head(max_rows)
-            .reset_index(drop=True)
-        )
+        evaluation = pd.concat(sampled_groups, ignore_index=True)
+        evaluation = evaluation.sample(frac=1, random_state=RANDOM_STATE).head(max_rows)
+        evaluation = evaluation[["review", "sentiment"]].reset_index(drop=True)
     return evaluation
 
 

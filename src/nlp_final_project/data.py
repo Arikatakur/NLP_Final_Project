@@ -47,18 +47,15 @@ def load_reviews(
         raise ValueError("Expected exactly two labels after normalization.")
 
     if sample_size is not None and sample_size > 0 and len(df) > sample_size:
-        df = (
-            df.groupby("sentiment", group_keys=False)
-            .apply(
-                lambda group: group.sample(
-                    n=max(1, round(sample_size * len(group) / len(df))),
-                    random_state=random_state,
-                )
+        sampled_groups = []
+        for _, group in df.groupby("sentiment", sort=False):
+            group_size = max(1, round(sample_size * len(group) / len(df)))
+            sampled_groups.append(
+                group.sample(n=min(group_size, len(group)), random_state=random_state)
             )
-            .sample(frac=1, random_state=random_state)
-            .head(sample_size)
-            .reset_index(drop=True)
-        )
+        df = pd.concat(sampled_groups, ignore_index=True)
+        df = df.sample(frac=1, random_state=random_state).head(sample_size)
+        df = df[["review", "sentiment"]].reset_index(drop=True)
 
     info = DatasetInfo(
         csv_path=path,
